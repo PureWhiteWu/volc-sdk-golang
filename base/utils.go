@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -14,14 +13,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bytedance/gopkg/lang/fastrand"
 	"github.com/google/uuid"
 )
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func init() {
-	rand.Seed(time.Now().Unix())
-}
 
 func createTempAKSK() (accessKeyId string, plainSk string, err error) {
 	if accessKeyId, err = generateAccessKeyId("AKTP"); err != nil {
@@ -50,7 +46,8 @@ func generateAccessKeyId(prefix string) (string, error) {
 func randStringRunes(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		b[i] = letterRunes[fastrand.Uint32n(uint32(len(letterRunes)))]
+
 	}
 	return string(b)
 }
